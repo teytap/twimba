@@ -129,9 +129,7 @@ button {
 }
 
 /* utility */
-.hidden {
-  display: none;
-}
+
 .hide {
   display: none;
 }

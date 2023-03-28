@@ -1,8 +1,7 @@
 import { tweetsData } from "./data.js";
 import { v4 as uuidv4 } from "https://jspm.dev/uuid";
 
-localStorage.clear();
-
+//localStorage.clear();
 const feed = document.getElementById("feed");
 
 if (localStorage.getItem("localData") === null) {
@@ -47,10 +46,19 @@ function handleRetweetClick(tweetId) {
 }
 
 function handleRepliesClick(replyId) {
-  document.getElementById(`replies-${replyId}`).classList.toggle("hidden");
+  document.getElementById(`replies-${replyId}`).classList.toggle("hide");
 }
-function handleDeleteTweet() {
-  mainData.shift();
+function handleDeleteTweet(deleteId) {
+  const targetTweetObj = mainData.filter(function (tweet) {
+    return tweet.uuid === deleteId;
+  })[0];
+  const index = mainData.indexOf(targetTweetObj);
+
+  console.log(index);
+  if (index > -1) {
+    mainData.splice(index, 1);
+  }
+
   localStorage.setItem("localData", JSON.stringify(mainData));
   render();
 }
@@ -85,7 +93,7 @@ function getFeedHtml() {
   mainData.forEach(function (tweets) {
     let likeIconClass = tweets.isLiked ? "liked" : "";
     let retweetIconClass = tweets.isRetweeted ? "retweeted" : "";
-    console.log(tweets.isUser);
+
     let deleteIconClass = tweets.isUser ? "" : "hide";
     let repliesHtml = "";
 
@@ -131,12 +139,11 @@ function getFeedHtml() {
             </div>   
         </div>            
     </div>
-     <div class="hidden" id="replies-${tweets.uuid}">
+     <div class="hide" id="replies-${tweets.uuid}">
         ${repliesHtml}
     </div>   
 </div>`;
   });
-
   return feedHtml;
 }
 
